@@ -1,0 +1,224 @@
+import os
+
+# Nom du projet
+project_name = "KLF_AGENCY"
+os.makedirs(project_name, exist_ok=True)
+
+# Structure des dossiers
+folders = [
+    f"{project_name}/frontend",
+    f"{project_name}/frontend/pages",
+    f"{project_name}/backend",
+    f"{project_name}/backend/routes"
+]
+
+for folder in folders:
+    os.makedirs(folder, exist_ok=True)
+
+# Contenu des fichiers
+files_content = {
+    # Frontend
+    f"{project_name}/frontend/index.html": """<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KLF AGENCY</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>KLF AGENCY</h1>
+  <p>Force & Vision pour vos créateurs TikTok</p>
+  <img src="logo.png" alt="Logo Lion & Aigle" width="100">
+  <nav>
+    <a href="pages/dashboard-admin.html">Admin</a>
+    <a href="pages/dashboard-creator.html">Créateur</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h2>Nos créateurs</h2>
+    <div id="creators-grid"></div>
+  </section>
+  <section>
+    <h2>Matchs officiels</h2>
+    <div id="matches-list"></div>
+  </section>
+</main>
+<footer>
+  <p>&copy; 2025 KLF AGENCY</p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
+""",
+    f"{project_name}/frontend/style.css": """body {
+  background-color: #0a0a0a;
+  color: gold;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header, footer {
+  background-color: #111;
+  padding: 20px;
+  text-align: center;
+}
+nav a {
+  color: gold;
+  margin: 0 15px;
+  text-decoration: none;
+}
+h1, h2 {
+  color: gold;
+}
+section {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid gold;
+  border-radius: 8px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+""",
+    f"{project_name}/frontend/script.js": """console.log("KLF AGENCY frontend chargé");
+
+const creators = [
+  { name: "Créateur 1", views: "10k" },
+  { name: "Créateur 2", views: "8k" }
+];
+const creatorsGrid = document.getElementById("creators-grid");
+if (creatorsGrid) {
+  creators.forEach(c => {
+    const div = document.createElement("div");
+    div.textContent = ${c.name} - Vues: ${c.views};
+    creatorsGrid.appendChild(div);
+  });
+}
+
+const matches = [
+  { name: "Match 1", note: "8/10" }
+];
+const matchesList = document.getElementById("matches-list");
+if (matchesList) {
+  matches.forEach(m => {
+    const div = document.createElement("div");
+    div.textContent = ${m.name} - Note: ${m.note};
+    matchesList.appendChild(div);
+  });
+}
+""",
+    f"{project_name}/frontend/pages/dashboard-admin.html": """<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - KLF AGENCY</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+<section id="finance">
+  <h2>Finances du mois</h2>
+  <p>Revenus totaux : 10 000 €</p>
+  <p>Dépenses : 4 000 €</p>
+  <p>Bénéfice net : 6 000 €</p>
+</section>
+<section id="creators">
+  <h2>Créateurs actifs</h2>
+  <ul>
+    <li>Créateur 1 - Vues: 10k</li>
+    <li>Créateur 2 - Vues: 8k</li>
+  </ul>
+</section>
+<section id="matches">
+  <h2>Matchs officiels</h2>
+  <ul>
+    <li>Match 1 - Note moyenne: 8/10</li>
+  </ul>
+</section>
+</body>
+</html>
+""",
+    f"{project_name}/frontend/pages/dashboard-creator.html": """<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créateur Dashboard - KLF AGENCY</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<h1>Dashboard Créateur</h1>
+<section id="revenus">
+  <h2>Mes revenus</h2>
+  <p>Revenu du mois : 2 500 €</p>
+</section>
+<section id="factures">
+  <h2>Mes factures</h2>
+  <ul>
+    <li>Facture #001 – Payée</li>
+    <li>Facture #002 – En attente</li>
+  </ul>
+</section>
+<section id="stats">
+  <h2>Statistiques TikTok</h2>
+  <p>Vues totales : 18 000</p>
+</section>
+<section id="matches">
+  <h2>Matchs officiels</h2>
+  <ul>
+    <li>Match 1 - Note : 8/10</li>
+  </ul>
+</section>
+</body>
+</html>
+""",
+    # Backend
+    f"{project_name}/backend/server.js": """const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.static('../frontend'));
+
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: '../frontend' });
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if(email === "admin@klfaggency.com" && password === "MotdepasseTemporaire123") {
+    return res.json({ success: true, role: "admin" });
+  }
+  res.json({ success: false });
+});
+
+app.listen(port, () => console.log(Server running on http://localhost:${port}));
+""",
+    f"{project_name}/backend/routes/auth.js": "// Auth routes placeholder",
+    f"{project_name}/backend/routes/creators.js": "// Creators routes placeholder",
+    f"{project_name}/backend/routes/matches.js": "// Matches routes placeholder",
+    f"{project_name}/backend/routes/finance.js": "// Finance routes placeholder",
+    f"{project_name}/README.txt": """Instructions pour lancer le projet:
+
+1. Installer Node.js
+2. Installer les dépendances :
+   npm install express
+3. Lancer le serveur backend :
+   node backend/server.js
+4. Ouvrir le site via le backend :
+   http://localhost:3000
+"""
+}
+
+# Création des fichiers
+for filepath, content in files_content.items():
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+
+print(f"✅ Site KLF_AGENCY généré dans le dossier '{project_name}' !")
+print("Tu peux maintenant uploader ce dossier sur Replit ou Netlify pour obtenir un lien live.")
